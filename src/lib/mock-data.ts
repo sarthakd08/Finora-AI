@@ -4,6 +4,9 @@ export const mockCalls: Call[] = [
   {
     id: '1',
     title: 'Investment Portfolio Review',
+    category: 'investment',
+    description: 'I want to review my current investment portfolio and get advice on rebalancing. My portfolio is heavily weighted in tech stocks and I\'m concerned about diversification.',
+    goals: 'Optimize portfolio allocation to reduce risk while maintaining growth potential. Learn about international diversification options.',
     date: '2024-10-01',
     duration: '25:30',
     status: 'completed',
@@ -51,6 +54,9 @@ export const mockCalls: Call[] = [
   {
     id: '2',
     title: 'Retirement Planning Consultation',
+    category: 'retirement',
+    description: 'I\'m 42 years old and want to ensure I\'m on track for retirement at 65. Currently contributing 8% to my 401(k) with employer match.',
+    goals: 'Maximize retirement savings and understand if I need to increase contributions. Explore Roth IRA options.',
     date: '2024-09-28',
     duration: '32:15',
     status: 'completed',
@@ -98,6 +104,9 @@ export const mockCalls: Call[] = [
   {
     id: '3',
     title: 'Debt Management Strategy',
+    category: 'debt',
+    description: 'I have $45,000 in total debt across credit cards and student loans. Looking for the best strategy to pay it off efficiently.',
+    goals: 'Create a clear debt payoff plan that minimizes interest payments and gets me debt-free as quickly as possible.',
     date: '2024-09-25',
     duration: '18:45',
     status: 'completed',

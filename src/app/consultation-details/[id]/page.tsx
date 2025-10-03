@@ -112,6 +112,47 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
           </CardContent>
         </Card>
 
+        {/* Category and Goals Card */}
+        {(call.category || call.description || call.goals) && (
+          <Card className="mb-8 border-none shadow-lg bg-white/80 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-lg">Consultation Context</CardTitle>
+              <CardDescription>Details provided before the call</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {call.category && (
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-500 mb-2">Category</h3>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-700 hover:bg-blue-100 capitalize text-sm">
+                    {call.category.replace('-', ' ')}
+                  </Badge>
+                </div>
+              )}
+              
+              {call.description && (
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-500 mb-2">Description</h3>
+                  <p className="text-sm text-slate-700 leading-relaxed bg-slate-50 rounded-lg p-3">
+                    {call.description}
+                  </p>
+                </div>
+              )}
+              
+              {call.goals && (
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-500 mb-2 flex items-center gap-1">
+                    <Target className="w-4 h-4" />
+                    Goals
+                  </h3>
+                  <p className="text-sm text-slate-700 leading-relaxed bg-blue-50 rounded-lg p-3 border-l-4 border-blue-600">
+                    {call.goals}
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {/* Tabs for Report and Feedback */}
         <Tabs defaultValue="report" className="space-y-6">
           <TabsList className="bg-white/80 backdrop-blur-sm p-1 h-auto">

@@ -1,6 +1,9 @@
 export interface Call {
   id: string;
   title: string;
+  category?: string;
+  description?: string;
+  goals?: string;
   date: string;
   duration: string;
   status: 'completed' | 'in-progress' | 'scheduled';

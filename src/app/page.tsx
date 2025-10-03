@@ -82,7 +82,7 @@ export default function DashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {mockCalls.map((call) => (
-            <Link key={call.id} href={`/call/${call.id}`}>
+            <Link key={call.id} href={`/consultation-details/${call.id}`}>
               <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-none bg-white/80 backdrop-blur-sm hover:scale-105 hover:bg-white">
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
