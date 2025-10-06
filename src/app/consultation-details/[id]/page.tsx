@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { mockCalls } from '@/lib/mock-data';
 import { ArrowLeft, Calendar, Clock, Star, AlertTriangle, CheckCircle2, Target, TrendingUp } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { UserButton } from '@clerk/nextjs';
 
 export default function CallDetailPage({ params }: { params: { id: string } }) {
   const call = mockCalls.find(c => c.id === params.id);
@@ -46,7 +47,16 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                 Back to Dashboard
               </Button>
             </Link>
-            <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: 'w-10 h-10'
+                  }
+                }}
+              />
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">

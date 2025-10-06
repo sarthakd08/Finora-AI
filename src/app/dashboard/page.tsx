@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { mockCalls } from '@/lib/mock-data';
 import { Clock, Calendar, TrendingUp, Phone } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { UserButton } from '@clerk/nextjs';
 
 export default function DashboardPage() {
   const completedCalls = mockCalls.filter(call => call.status === 'completed');
@@ -37,6 +38,13 @@ export default function DashboardPage() {
                 New Call
               </Button>
             </Link>
+            <UserButton 
+              appearance={{
+                elements: {
+                  avatarBox: 'w-10 h-10'
+                }
+              }}
+            />
           </div>
         </div>
       </header>

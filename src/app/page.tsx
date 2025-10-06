@@ -22,6 +22,7 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -71,22 +72,48 @@ export default function LandingPage() {
           </motion.div>
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <Link href="/dashboard">
-              <Button variant="ghost" className="dark:text-white">
-                Dashboard
-              </Button>
-            </Link>
-            <Link href="/call">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
-                  <Phone className="w-4 h-4 mr-2" />
-                  Start Free Call
+            <SignedOut>
+              <Link href="/sign-in">
+                <Button variant="ghost" className="dark:text-white">
+                  Sign In
                 </Button>
-              </motion.div>
-            </Link>
+              </Link>
+              <Link href="/sign-up">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
+                    Get Started Free
+                  </Button>
+                </motion.div>
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <Link href="/dashboard">
+                <Button variant="ghost" className="dark:text-white">
+                  Dashboard
+                </Button>
+              </Link>
+              <Link href="/call">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg">
+                    <Phone className="w-4 h-4 mr-2" />
+                    Start Call
+                  </Button>
+                </motion.div>
+              </Link>
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: 'w-10 h-10'
+                  }
+                }}
+              />
+            </SignedIn>
           </div>
         </div>
       </motion.header>

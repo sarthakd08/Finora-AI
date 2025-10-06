@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, Mic, MicOff, Phone, PhoneOff, TrendingUp, Volume2, User, FileText, Target } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { UserButton } from '@clerk/nextjs';
 
 export default function NewCallPage() {
   const [isCallActive, setIsCallActive] = useState(false);
@@ -133,7 +134,16 @@ export default function NewCallPage() {
               Back to Dashboard
             </Button>
           </Link>
-            <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <UserButton 
+                appearance={{
+                  elements: {
+                    avatarBox: 'w-10 h-10'
+                  }
+                }}
+              />
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center">
@@ -300,7 +310,7 @@ export default function NewCallPage() {
                           currentSpeaker === 'agent' ? 'scale-110 ring-4 ring-slate-400/50 dark:ring-slate-500/50' : ''
                         }`}>
                           <User className="w-16 h-16 text-white" />
-                        </div>
+                    </div>
                           <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-white flex items-center justify-center shadow-lg">
                       <div className="w-3 h-3 rounded-full bg-white animate-pulse" />
                     </div>
@@ -339,7 +349,7 @@ export default function NewCallPage() {
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-1">You</h2>
                         <Badge variant="secondary" className={`${currentSpeaker === 'user' ? 'bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300' : isMuted ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
                           {currentSpeaker === 'user' ? 'Speaking...' : isMuted ? 'Muted' : 'Listening'}
-                        </Badge>
+                  </Badge>
                         {currentSpeaker === 'user' && (
                           <div className="flex items-center justify-center gap-1 mt-3">
                             <div className="w-1 h-4 bg-violet-600 dark:bg-violet-400 rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
@@ -423,8 +433,8 @@ export default function NewCallPage() {
                         </p>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+              </CardContent>
+            </Card>
 
                 <p className="text-xs text-center text-slate-500 dark:text-slate-400">
                   Demo interface - Real voice AI integration coming soon
@@ -434,15 +444,15 @@ export default function NewCallPage() {
 
             {/* RIGHT SECTION - Live Transcript Only */}
             <div className="bg-white dark:bg-gray-950 flex flex-col p-8 overflow-hidden h-screen">
-              {/* Live Transcript */}
+            {/* Live Transcript */}
               <Card className="border-none shadow-lg bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex-1 flex flex-col overflow-hidden">
                 <CardHeader className="pb-4">
                   <CardTitle className="flex items-center gap-2 text-xl dark:text-white">
                     <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                    Live Transcript
-                  </CardTitle>
+                  Live Transcript
+                </CardTitle>
                   <CardDescription className="dark:text-slate-400">Real-time conversation</CardDescription>
-                </CardHeader>
+              </CardHeader>
                 <CardContent className="flex-1 overflow-hidden px-6">
                   <div className="space-y-4 h-full overflow-y-auto pr-2 pb-4">
                   {transcript.map((entry, index) => (
@@ -461,18 +471,18 @@ export default function NewCallPage() {
                           <span className="text-white text-xs font-bold">You</span>
                         )}
                       </div>
-                        <div className={`flex-1 ${entry.speaker === 'user' ? 'text-right' : 'text-left'}`}>
+                      <div className={`flex-1 ${entry.speaker === 'user' ? 'text-right' : 'text-left'}`}>
                           <div className={`inline-block rounded-2xl px-4 py-3 max-w-[85%] shadow-sm ${
-                            entry.speaker === 'agent'
+                          entry.speaker === 'agent'
                               ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700'
                               : 'bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500 text-white'
-                          }`}>
-                            <p className="text-sm leading-relaxed">{entry.text}</p>
-                          </div>
-                          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 px-2">
-                            {new Date(entry.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
-                          </p>
+                        }`}>
+                          <p className="text-sm leading-relaxed">{entry.text}</p>
                         </div>
+                          <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 px-2">
+                          {new Date(entry.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
