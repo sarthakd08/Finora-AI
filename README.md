@@ -128,7 +128,9 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
 3. Go to "API Keys" in the sidebar
 4. Copy your Publishable Key and Secret Key
 
-See `ENV.md` for detailed instructions.
+⚠️ **Important**: After adding environment variables, you **must restart your development server** for changes to take effect.
+
+📖 See **`SETUP_GUIDE.md`** for detailed step-by-step authentication setup instructions and troubleshooting.
 
 ## Project Structure
 
