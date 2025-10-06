@@ -292,12 +292,12 @@ export default function NewCallPage() {
                         {/* Ripple Effect for Agent */}
                         {currentSpeaker === 'agent' && (
                           <>
-                            <span className="absolute inset-0 rounded-full bg-emerald-400/30 animate-ping" />
-                            <span className="absolute inset-0 rounded-full bg-emerald-400/20 animate-pulse" style={{ animationDelay: '0.15s' }} />
+                            <span className="absolute inset-0 rounded-full bg-slate-400/30 animate-ping" />
+                            <span className="absolute inset-0 rounded-full bg-slate-400/20 animate-pulse" style={{ animationDelay: '0.15s' }} />
                           </>
                         )}
-                        <div className={`w-32 h-32 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-500 flex items-center justify-center shadow-xl transition-all duration-300 ${
-                          currentSpeaker === 'agent' ? 'scale-110 ring-4 ring-emerald-400/50 dark:ring-emerald-500/50' : ''
+                        <div className={`w-32 h-32 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600 flex items-center justify-center shadow-xl transition-all duration-300 ${
+                          currentSpeaker === 'agent' ? 'scale-110 ring-4 ring-slate-400/50 dark:ring-slate-500/50' : ''
                         }`}>
                           <User className="w-16 h-16 text-white" />
                         </div>
@@ -306,16 +306,16 @@ export default function NewCallPage() {
                     </div>
                   </div>
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{agentName}</h2>
-                        <Badge variant="secondary" className={`${currentSpeaker === 'agent' ? 'bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
+                        <Badge variant="secondary" className={`${currentSpeaker === 'agent' ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
                           {currentSpeaker === 'agent' ? 'Speaking...' : 'Connected'}
                         </Badge>
                         {currentSpeaker === 'agent' && (
                           <div className="flex items-center justify-center gap-1 mt-3">
-                            <div className="w-1 h-3 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
-                            <div className="w-1 h-5 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
-                            <div className="w-1 h-4 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
-                            <div className="w-1 h-6 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
-                            <div className="w-1 h-4 bg-emerald-600 dark:bg-emerald-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
+                            <div className="w-1 h-3 bg-slate-600 dark:bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0s' }} />
+                            <div className="w-1 h-5 bg-slate-600 dark:bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }} />
+                            <div className="w-1 h-4 bg-slate-600 dark:bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                            <div className="w-1 h-6 bg-slate-600 dark:bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }} />
+                            <div className="w-1 h-4 bg-slate-600 dark:bg-slate-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
                           </div>
                         )}
                       </div>
@@ -452,7 +452,7 @@ export default function NewCallPage() {
                     >
                         <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ${
                         entry.speaker === 'agent' 
-                          ? 'bg-gradient-to-br from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-500' 
+                          ? 'bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600' 
                           : 'bg-gradient-to-br from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500'
                       }`}>
                         {entry.speaker === 'agent' ? (
@@ -464,7 +464,7 @@ export default function NewCallPage() {
                         <div className={`flex-1 ${entry.speaker === 'user' ? 'text-right' : 'text-left'}`}>
                           <div className={`inline-block rounded-2xl px-4 py-3 max-w-[85%] shadow-sm ${
                             entry.speaker === 'agent'
-                              ? 'bg-emerald-50 dark:bg-emerald-900/30 text-slate-900 dark:text-white border border-emerald-200 dark:border-emerald-800'
+                              ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700'
                               : 'bg-gradient-to-r from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500 text-white'
                           }`}>
                             <p className="text-sm leading-relaxed">{entry.text}</p>
