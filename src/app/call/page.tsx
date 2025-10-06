@@ -127,7 +127,7 @@ export default function NewCallPage() {
       <header className="border-b border-slate-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
-          <Link href="/">
+          <Link href="/dashboard">
               <Button variant="ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
