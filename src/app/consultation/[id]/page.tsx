@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Mic, MicOff, PhoneOff, Volume2, User } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { Sidebar } from '@/components/layout/sidebar';
 
 export default function ConsultationPage() {
   const params = useParams();
@@ -113,24 +112,31 @@ export default function ConsultationPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900">
-      <Sidebar />
-      
-      <div className="flex-1 lg:ml-64">
-        {/* Header - Desktop only */}
-        <header className="hidden lg:block border-b border-slate-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-30">
-          <div className="px-8 py-4 flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-slate-900">
+      {/* Header */}
+      <header className="border-b border-slate-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-30">
+        <div className="px-4 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => router.push('/dashboard')}
+              className="flex items-center gap-2"
+            >
+              ← Back
+            </Button>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Active Consultation</h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400">{topic}</p>
+              <h1 className="text-lg lg:text-2xl font-bold text-slate-900 dark:text-white">Active Consultation</h1>
+              <p className="text-xs lg:text-sm text-slate-600 dark:text-slate-400">{topic}</p>
             </div>
-            <ThemeToggle />
           </div>
-        </header>
+          <ThemeToggle />
+        </div>
+      </header>
 
-        {/* Active Call Screen */}
-        <main className="w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:h-[calc(100vh-80px)]">
+      {/* Active Call Screen */}
+      <main className="w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:h-[calc(100vh-80px)]">
             {/* LEFT SECTION */}
             <div className="bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-950 dark:to-black flex items-center justify-center p-4 lg:p-8 min-h-[calc(100vh-130px)] lg:h-full overflow-y-auto">
               <div className="max-w-2xl w-full space-y-4 lg:space-y-6">
@@ -305,7 +311,6 @@ export default function ConsultationPage() {
             </div>
           </div>
         </main>
-      </div>
     </div>
   );
 }
