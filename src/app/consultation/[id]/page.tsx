@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +25,7 @@ export default function ConsultationPage() {
   const [currentSpeaker, setCurrentSpeaker] = useState<'user' | 'agent' | null>(null);
   
   const agentName = 'Alex Financial AI';
+  const transcriptEndRef = useRef<HTMLDivElement>(null);
 
   // Timer effect
   useEffect(() => {
@@ -86,6 +87,13 @@ export default function ConsultationPage() {
       setCurrentSpeaker(null);
     }, 18000);
   }, [topic]);
+
+  // Auto-scroll to bottom when transcript updates
+  useEffect(() => {
+    if (transcriptEndRef.current) {
+      transcriptEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [transcript]);
 
   // Format duration
   const formatDuration = (seconds: number) => {
@@ -290,6 +298,8 @@ export default function ConsultationPage() {
                       </div>
                     </div>
                   ))}
+                  {/* Scroll anchor */}
+                  <div ref={transcriptEndRef} />
                 </CardContent>
               </Card>
             </div>
