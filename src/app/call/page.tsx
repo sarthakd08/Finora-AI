@@ -158,7 +158,7 @@ export default function NewCallPage() {
       </header>
 
       {/* Main Content */}
-      <main className={`${isCallActive ? 'w-full h-full' : 'container mx-auto px-4 py-8 max-w-4xl'}`}>
+      <main className={`${isCallActive ? 'w-full' : 'container mx-auto px-4 py-8 max-w-4xl'}`}>
         {!isCallActive ? (
           /* Pre-Call Screen */
           <div className="space-y-6">
@@ -288,14 +288,14 @@ export default function NewCallPage() {
           </div>
         ) : (
           /* Active Call Screen - Full Screen Split Layout */
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 h-screen">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             {/* LEFT SECTION - Voice Interface & Details */}
-            <div className="bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-950 dark:to-black flex items-center justify-center p-8 overflow-y-auto">
-              <div className="max-w-2xl w-full space-y-6">
+            <div className="bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-950 dark:to-black flex items-center justify-center p-4 lg:p-8 min-h-[calc(100vh-130px)] overflow-y-auto">
+              <div className="max-w-2xl w-full space-y-4 lg:space-y-6">
                 {/* Avatars Side by Side */}
                 <Card className="border-none shadow-2xl bg-white/90 dark:bg-gray-800/95 backdrop-blur-sm">
-                  <CardContent className="p-8">
-                    <div className="grid grid-cols-2 gap-8 mb-8">
+                  <CardContent className="p-4 lg:p-8">
+                    <div className="grid grid-cols-2 gap-4 lg:gap-8 mb-4 lg:mb-8">
                       {/* Alex AI Agent Avatar */}
                 <div className="text-center">
                   <div className="relative inline-block mb-4">
@@ -306,16 +306,16 @@ export default function NewCallPage() {
                             <span className="absolute inset-0 rounded-full bg-slate-400/20 animate-pulse" style={{ animationDelay: '0.15s' }} />
                           </>
                         )}
-                        <div className={`w-32 h-32 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600 flex items-center justify-center shadow-xl transition-all duration-300 ${
+                        <div className={`w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600 flex items-center justify-center shadow-xl transition-all duration-300 ${
                           currentSpeaker === 'agent' ? 'scale-110 ring-4 ring-slate-400/50 dark:ring-slate-500/50' : ''
                         }`}>
-                          <User className="w-16 h-16 text-white" />
+                          <User className="w-12 h-12 lg:w-16 lg:h-16 text-white" />
                     </div>
                           <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-white flex items-center justify-center shadow-lg">
                       <div className="w-3 h-3 rounded-full bg-white animate-pulse" />
                     </div>
                   </div>
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{agentName}</h2>
+                        <h2 className="text-base lg:text-lg font-bold text-slate-900 dark:text-white mb-1">{agentName}</h2>
                         <Badge variant="secondary" className={`${currentSpeaker === 'agent' ? 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
                           {currentSpeaker === 'agent' ? 'Speaking...' : 'Connected'}
                         </Badge>
@@ -340,13 +340,13 @@ export default function NewCallPage() {
                             <span className="absolute inset-0 rounded-full bg-violet-400/20 animate-pulse" style={{ animationDelay: '0.15s' }} />
                           </>
                         )}
-                        <div className={`w-32 h-32 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500 flex items-center justify-center shadow-xl transition-all duration-300 ${
+                        <div className={`w-24 h-24 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500 flex items-center justify-center shadow-xl transition-all duration-300 ${
                           currentSpeaker === 'user' ? 'scale-110 ring-4 ring-violet-400/50 dark:ring-violet-500/50' : ''
                         }`}>
-                          <User className="w-16 h-16 text-white" />
+                          <User className="w-12 h-12 lg:w-16 lg:h-16 text-white" />
                         </div>
                         </div>
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-1">You</h2>
+                        <h2 className="text-base lg:text-lg font-bold text-slate-900 dark:text-white mb-1">You</h2>
                         <Badge variant="secondary" className={`${currentSpeaker === 'user' ? 'bg-violet-100 dark:bg-violet-900 text-violet-700 dark:text-violet-300' : isMuted ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
                           {currentSpeaker === 'user' ? 'Speaking...' : isMuted ? 'Muted' : 'Listening'}
                   </Badge>
@@ -443,7 +443,7 @@ export default function NewCallPage() {
             </div>
 
             {/* RIGHT SECTION - Live Transcript Only */}
-            <div className="bg-white dark:bg-gray-950 flex flex-col p-8 overflow-hidden h-screen">
+            <div className="bg-white dark:bg-gray-950 flex flex-col p-4 lg:p-8 overflow-hidden min-h-[calc(100vh-130px)]">
             {/* Live Transcript */}
               <Card className="border-none shadow-lg bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex-1 flex flex-col overflow-hidden">
                 <CardHeader className="pb-4">
@@ -460,7 +460,7 @@ export default function NewCallPage() {
                       key={index}
                       className={`flex gap-3 ${entry.speaker === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
                     >
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ${
+                        <div className={`w-8 h-8 lg:w-9 lg:h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ${
                         entry.speaker === 'agent' 
                           ? 'bg-gradient-to-br from-slate-600 to-slate-700 dark:from-slate-500 dark:to-slate-600' 
                           : 'bg-gradient-to-br from-violet-600 to-indigo-600 dark:from-violet-500 dark:to-indigo-500'
