@@ -65,8 +65,8 @@ export default function StartConsultationPage() {
     console.log('Category:', formData.category);
     console.log('Goals:', formData.goals);
 
-    // Navigate to consultation page
-    router.push(`/consultation/${consultationId}?topic=${encodeURIComponent(formData.topic)}&category=${formData.category}&goals=${encodeURIComponent(formData.goals)}`);
+    // Navigate to consultation page (only with ID)
+    router.push(`/consultation/${consultationId}`);
   };
 
   return (

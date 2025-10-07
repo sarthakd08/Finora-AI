@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useSearchParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -10,13 +10,14 @@ import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function ConsultationPage() {
   const params = useParams();
-  const searchParams = useSearchParams();
   const router = useRouter();
   
   const consultationId = params.id as string;
-  const topic = searchParams.get('topic') || 'Financial Consultation';
-  const category = searchParams.get('category') || 'general';
-  const goals = searchParams.get('goals') || '';
+  
+  // Default consultation details (in a real app, these would be fetched from DB)
+  const topic = 'Financial Consultation';
+  const category = 'general';
+  const goals = '';
 
   const [isMuted, setIsMuted] = useState(false);
   const [duration, setDuration] = useState(0);
