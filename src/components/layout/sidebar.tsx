@@ -23,7 +23,7 @@ const navigation = [
   },
   {
     name: 'Schedule Consultation',
-    href: '/call',
+    href: '/start-consultation',
     icon: Phone,
   },
   {

@@ -95,7 +95,7 @@ export default function LandingPage() {
                   Dashboard
                 </Button>
               </Link>
-              <Link href="/call">
+              <Link href="/start-consultation">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -157,7 +157,7 @@ export default function LandingPage() {
             variants={fadeInUp}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Link href="/call">
+            <Link href="/start-consultation">
               <motion.div
                 whileHover={{ scale: 1.05, boxShadow: "0 20px 50px rgba(59, 130, 246, 0.3)" }}
                 whileTap={{ scale: 0.95 }}
@@ -446,7 +446,7 @@ export default function LandingPage() {
           <p className="text-xl text-slate-600 dark:text-slate-300 mb-10">
             Start your first AI consultation today. No credit card required.
           </p>
-          <Link href="/call">
+          <Link href="/start-consultation">
             <motion.div
               whileHover={{ scale: 1.05, boxShadow: "0 25px 60px rgba(59, 130, 246, 0.4)" }}
               whileTap={{ scale: 0.95 }}
