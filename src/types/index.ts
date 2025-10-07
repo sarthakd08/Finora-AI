@@ -1,4 +1,4 @@
-export interface Call {
+export interface Consultation {
   id: string;
   title: string;
   category?: string;

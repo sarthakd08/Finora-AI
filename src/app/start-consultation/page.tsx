@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Phone, TrendingUp, User, CheckCircle, Sparkles } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserButton } from '@clerk/nextjs';
-import type { Call } from '@/types';
+import type { Consultation } from '@/types';
 
 export default function StartConsultationPage() {
   const router = useRouter();
@@ -44,8 +44,8 @@ export default function StartConsultationPage() {
     // Generate unique ID
     const consultationId = generateConsultationId();
 
-    // Create consultation object following Call interface
-    const newConsultation: Call = {
+    // Create consultation object following Consultation interface
+    const newConsultation: Consultation = {
       id: consultationId,
       title: formData.topic,
       category: formData.category,

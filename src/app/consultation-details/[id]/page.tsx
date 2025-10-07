@@ -5,15 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { mockCalls } from '@/lib/mock-data';
+import { mockConsultations } from '@/lib/mock-data';
 import { ArrowLeft, Calendar, Clock, Star, AlertTriangle, CheckCircle2, Target, TrendingUp } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserButton } from '@clerk/nextjs';
 
-export default function CallDetailPage({ params }: { params: { id: string } }) {
-  const call = mockCalls.find(c => c.id === params.id);
+export default function ConsultationDetailPage({ params }: { params: { id: string } }) {
+  const consultation = mockConsultations.find(c => c.id === params.id);
 
-  if (!call) {
+  if (!consultation) {
     notFound();
   }
 
@@ -63,8 +63,8 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
               <TrendingUp className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{call.title}</h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400">with {call.agentName}</p>
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{consultation.title}</h1>
+              <p className="text-sm text-slate-600 dark:text-slate-400">with {consultation.agentName}</p>
             </div>
           </div>
         </div>
@@ -78,13 +78,13 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-xl mb-2 dark:text-white">Consultation Summary</CardTitle>
-                <CardDescription className="dark:text-slate-400">{call.summary}</CardDescription>
+                <CardDescription className="dark:text-slate-400">{consultation.summary}</CardDescription>
               </div>
               <Badge 
-                variant={call.status === 'completed' ? 'default' : 'secondary'}
-                className={call.status === 'completed' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900' : ''}
+                variant={consultation.status === 'completed' ? 'default' : 'secondary'}
+                className={consultation.status === 'completed' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900' : ''}
               >
-                {call.status}
+                {consultation.status}
               </Badge>
             </div>
           </CardHeader>
@@ -94,30 +94,30 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                 <Calendar className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                 <div>
                   <p className="text-xs text-slate-500 dark:text-slate-400">Date</p>
-                  <p className="font-medium dark:text-white">{new Date(call.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+                  <p className="font-medium dark:text-white">{new Date(consultation.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                 <div>
                   <p className="text-xs text-slate-500 dark:text-slate-400">Duration</p>
-                  <p className="font-medium dark:text-white">{call.duration}</p>
+                  <p className="font-medium dark:text-white">{consultation.duration}</p>
                 </div>
               </div>
-              {call.feedback && (
+              {consultation.feedback && (
                 <>
                   <div className="flex items-center gap-2 text-sm">
                     <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400">Rating</p>
-                      <p className="font-medium dark:text-white">{call.feedback.rating}.0 / 5.0</p>
+                      <p className="font-medium dark:text-white">{consultation.feedback.rating}.0 / 5.0</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
                     <div>
                       <p className="text-xs text-slate-500 dark:text-slate-400">Helpfulness</p>
-                      <p className="font-medium dark:text-white">{call.feedback.helpfulness}/5</p>
+                      <p className="font-medium dark:text-white">{consultation.feedback.helpfulness}/5</p>
                     </div>
                   </div>
                 </>
@@ -127,39 +127,39 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
         </Card>
 
         {/* Category and Goals Card */}
-        {(call.category || call.description || call.goals) && (
+        {(consultation.category || consultation.description || consultation.goals) && (
           <Card className="mb-8 border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
             <CardHeader>
               <CardTitle className="text-lg">Consultation Context</CardTitle>
               <CardDescription>Details provided before the call</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {call.category && (
+              {consultation.category && (
                 <div>
                   <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2">Category</h3>
                   <Badge variant="secondary" className="bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900 capitalize text-sm">
-                    {call.category.replace('-', ' ')}
+                    {consultation.category.replace('-', ' ')}
                   </Badge>
                 </div>
               )}
               
-              {call.description && (
+              {consultation.description && (
                 <div>
                   <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2">Description</h3>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-900 rounded-lg p-3">
-                    {call.description}
+                    {consultation.description}
                   </p>
                 </div>
               )}
               
-              {call.goals && (
+              {consultation.goals && (
                 <div>
                   <h3 className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1">
                     <Target className="w-4 h-4" />
                     Goals
                   </h3>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed bg-blue-50 dark:bg-blue-950/30 rounded-lg p-3 border-l-4 border-blue-600">
-                    {call.goals}
+                    {consultation.goals}
                   </p>
                 </div>
               )}
@@ -180,7 +180,7 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
 
           {/* Report Tab */}
           <TabsContent value="report" className="space-y-6">
-            {call.report && (
+            {consultation.report && (
               <>
                 {/* Overview */}
                 <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
@@ -193,19 +193,19 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{call.report.overview}</p>
+                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{consultation.report.overview}</p>
                   </CardContent>
                 </Card>
 
                 {/* Financial Metrics */}
-                {call.report.financialMetrics && (
+                {consultation.report.financialMetrics && (
                   <Card className="border-none shadow-lg bg-gradient-to-br from-blue-600 to-indigo-600 dark:from-blue-500 dark:to-indigo-500 text-white">
                     <CardHeader>
                       <CardTitle>Key Financial Metrics</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {call.report.financialMetrics.map((metric, index) => (
+                        {consultation.report.financialMetrics.map((metric, index) => (
                           <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
                             <p className="text-sm text-white/80 mb-1">{metric.label}</p>
                             <p className="text-2xl font-bold">{metric.value}</p>
@@ -217,15 +217,15 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                 )}
 
                 {/* Risk Assessment */}
-                <Card className={`border-none shadow-lg ${getRiskColor(call.report.riskAssessment.level)}`}>
+                <Card className={`border-none shadow-lg ${getRiskColor(consultation.report.riskAssessment.level)}`}>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      {getRiskIcon(call.report.riskAssessment.level)}
-                      Risk Assessment: {call.report.riskAssessment.level.toUpperCase()}
+                      {getRiskIcon(consultation.report.riskAssessment.level)}
+                      Risk Assessment: {consultation.report.riskAssessment.level.toUpperCase()}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="leading-relaxed">{call.report.riskAssessment.description}</p>
+                    <p className="leading-relaxed">{consultation.report.riskAssessment.description}</p>
                   </CardContent>
                 </Card>
 
@@ -241,7 +241,7 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {call.report.keyPoints.map((point, index) => (
+                      {consultation.report.keyPoints.map((point, index) => (
                         <li key={index} className="flex items-start gap-3">
                           <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">
                             {index + 1}
@@ -265,7 +265,7 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {call.report.recommendations.map((rec, index) => (
+                      {consultation.report.recommendations.map((rec, index) => (
                         <li key={index} className="flex items-start gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-950/30">
                           <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                           <span className="text-slate-700 dark:text-slate-300 leading-relaxed">{rec}</span>
@@ -288,7 +288,7 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-3">
-                      {call.report.actionItems.map((item, index) => (
+                      {consultation.report.actionItems.map((item, index) => (
                         <li key={index} className="flex items-start gap-3 p-4 rounded-lg border-l-4 border-orange-500 bg-orange-50 dark:bg-orange-950/30">
                           <span className="w-6 h-6 rounded bg-orange-50 dark:bg-orange-950/300 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">
                             {index + 1}
@@ -305,7 +305,7 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
 
           {/* Feedback Tab */}
           <TabsContent value="feedback">
-            {call.feedback ? (
+            {consultation.feedback ? (
               <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -313,7 +313,7 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                     Client Feedback
                   </CardTitle>
                   <CardDescription>
-                    Submitted on {new Date(call.feedback.timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                    Submitted on {new Date(consultation.feedback.timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -324,10 +324,10 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`w-8 h-8 ${star <= call.feedback!.rating ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300'}`}
+                          className={`w-8 h-8 ${star <= consultation.feedback!.rating ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300'}`}
                         />
                       ))}
-                      <span className="text-2xl font-bold text-slate-900 ml-2">{call.feedback.rating}.0</span>
+                      <span className="text-2xl font-bold text-slate-900 ml-2">{consultation.feedback.rating}.0</span>
                     </div>
                   </div>
 
@@ -341,10 +341,10 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                         <div className="flex-1 bg-slate-200 rounded-full h-3">
                           <div 
                             className="bg-gradient-to-r from-blue-600 to-indigo-600 h-3 rounded-full transition-all"
-                            style={{ width: `${(call.feedback.helpfulness / 5) * 100}%` }}
+                            style={{ width: `${(consultation.feedback.helpfulness / 5) * 100}%` }}
                           />
                         </div>
-                        <span className="text-lg font-semibold text-slate-900">{call.feedback.helpfulness}/5</span>
+                        <span className="text-lg font-semibold text-slate-900">{consultation.feedback.helpfulness}/5</span>
                       </div>
                     </div>
                     <div>
@@ -353,10 +353,10 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                         <div className="flex-1 bg-slate-200 rounded-full h-3">
                           <div 
                             className="bg-gradient-to-r from-purple-600 to-pink-600 h-3 rounded-full transition-all"
-                            style={{ width: `${(call.feedback.clarity / 5) * 100}%` }}
+                            style={{ width: `${(consultation.feedback.clarity / 5) * 100}%` }}
                           />
                         </div>
-                        <span className="text-lg font-semibold text-slate-900">{call.feedback.clarity}/5</span>
+                        <span className="text-lg font-semibold text-slate-900">{consultation.feedback.clarity}/5</span>
                       </div>
                     </div>
                   </div>
@@ -367,7 +367,7 @@ export default function CallDetailPage({ params }: { params: { id: string } }) {
                   <div>
                     <h3 className="font-semibold text-slate-900 mb-3">Comments</h3>
                     <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border-l-4 border-blue-600">
-                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed italic">&quot;{call.feedback.comment}&quot;</p>
+                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed italic">&quot;{consultation.feedback.comment}&quot;</p>
                     </div>
                   </div>
                 </CardContent>

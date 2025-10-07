@@ -1,6 +1,6 @@
-import { Call } from '@/types';
+import { Consultation } from '@/types';
 
-export const mockCalls: Call[] = [
+export const mockConsultations: Consultation[] = [
   {
     id: '1',
     title: 'Investment Portfolio Review',

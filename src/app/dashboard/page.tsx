@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { mockCalls } from '@/lib/mock-data';
+import { mockConsultations } from '@/lib/mock-data';
 import { Clock, Calendar } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Sidebar } from '@/components/layout/sidebar';
 
 export default function DashboardPage() {
-  const completedCalls = mockCalls.filter(call => call.status === 'completed');
-  const totalDuration = completedCalls.reduce((acc, call) => {
-    const [minutes] = call.duration.split(':');
+  const completedConsultations = mockConsultations.filter(consultation => consultation.status === 'completed');
+  const totalDuration = completedConsultations.reduce((acc, consultation) => {
+    const [minutes] = consultation.duration.split(':');
     return acc + parseInt(minutes);
   }, 0);
 
@@ -37,7 +37,7 @@ export default function DashboardPage() {
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
               <CardHeader className="pb-3">
                 <CardDescription className="dark:text-slate-400">Total Consultations</CardDescription>
-                <CardTitle className="text-3xl dark:text-white">{completedCalls.length}</CardTitle>
+                <CardTitle className="text-3xl dark:text-white">{completedConsultations.length}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-green-600 dark:text-green-400 font-medium">All time</p>
@@ -50,7 +50,7 @@ export default function DashboardPage() {
                 <CardTitle className="text-3xl dark:text-white">{totalDuration} min</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Average: {Math.round(totalDuration / completedCalls.length)} min/call</p>
+                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Average: {Math.round(totalDuration / completedConsultations.length)} min/consultation</p>
               </CardContent>
             </Card>
             
@@ -58,11 +58,11 @@ export default function DashboardPage() {
               <CardHeader className="pb-3">
                 <CardDescription className="dark:text-slate-400">Satisfaction Rate</CardDescription>
                 <CardTitle className="text-3xl dark:text-white">
-                  {((completedCalls.reduce((acc, call) => acc + (call.feedback?.rating || 0), 0) / completedCalls.length / 5) * 100).toFixed(0)}%
+                  {((completedConsultations.reduce((acc, consultation) => acc + (consultation.feedback?.rating || 0), 0) / completedConsultations.length / 5) * 100).toFixed(0)}%
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">Based on {completedCalls.length} reviews</p>
+                <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">Based on {completedConsultations.length} reviews</p>
               </CardContent>
             </Card>
           </div>
@@ -74,43 +74,43 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockCalls.map((call) => (
-              <Link key={call.id} href={`/consultation-details/${call.id}`}>
+            {mockConsultations.map((consultation) => (
+              <Link key={consultation.id} href={`/consultation-details/${consultation.id}`}>
                 <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-none bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm hover:scale-105 hover:bg-white dark:hover:bg-gray-800">
                   <CardHeader>
                     <div className="flex items-start justify-between mb-2">
                       <Badge 
-                        variant={call.status === 'completed' ? 'default' : 'secondary'}
-                        className={call.status === 'completed' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900' : ''}
+                        variant={consultation.status === 'completed' ? 'default' : 'secondary'}
+                        className={consultation.status === 'completed' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900' : ''}
                       >
-                        {call.status}
+                        {consultation.status}
                       </Badge>
-                      {call.feedback && (
+                      {consultation.feedback && (
                         <div className="flex items-center gap-1 text-sm dark:text-white">
                           <span className="text-yellow-500">★</span>
-                          <span className="font-semibold">{call.feedback.rating}.0</span>
+                          <span className="font-semibold">{consultation.feedback.rating}.0</span>
                         </div>
                       )}
                     </div>
                     <CardTitle className="text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors dark:text-white">
-                      {call.title}
+                      {consultation.title}
                     </CardTitle>
                     <CardDescription className="text-xs mt-1 dark:text-slate-400">
-                      with {call.agentName}
+                      with {consultation.agentName}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">
-                      {call.summary}
+                      {consultation.summary}
                     </p>
                     <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
                       <div className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        <span>{new Date(call.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                        <span>{new Date(consultation.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        <span>{call.duration}</span>
+                        <span>{consultation.duration}</span>
                       </div>
                     </div>
                   </CardContent>
