@@ -122,9 +122,9 @@ export default function ConsultationPage() {
 
         {/* Active Call Screen */}
         <main className="w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:h-[calc(100vh-80px)]">
             {/* LEFT SECTION */}
-            <div className="bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-950 dark:to-black flex items-center justify-center p-4 lg:p-8 min-h-[calc(100vh-130px)] overflow-y-auto">
+            <div className="bg-gradient-to-br from-slate-100 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-950 dark:to-black flex items-center justify-center p-4 lg:p-8 min-h-[calc(100vh-130px)] lg:h-full overflow-y-auto">
               <div className="max-w-2xl w-full space-y-4 lg:space-y-6">
                 <Card className="border-none shadow-2xl bg-white/90 dark:bg-gray-800/95 backdrop-blur-sm">
                   <CardContent className="p-4 lg:p-8">
@@ -251,9 +251,9 @@ export default function ConsultationPage() {
             </div>
 
             {/* RIGHT SECTION - Transcript */}
-            <div className="bg-white dark:bg-gray-950 flex flex-col p-4 lg:p-8 overflow-hidden min-h-[calc(100vh-130px)]">
-              <Card className="border-none shadow-lg bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex-1 flex flex-col overflow-hidden">
-                <CardHeader className="pb-4">
+            <div className="bg-white dark:bg-gray-950 flex flex-col p-4 lg:p-8 min-h-[calc(100vh-130px)] lg:h-full">
+              <Card className="border-none shadow-lg bg-gradient-to-br from-slate-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800 flex flex-col h-full">
+                <CardHeader className="pb-4 flex-shrink-0">
                   <CardTitle className="flex items-center gap-2 text-xl dark:text-white">
                     <span className="relative flex h-3 w-3">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -262,7 +262,7 @@ export default function ConsultationPage() {
                     Live Transcript
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-1 overflow-y-auto space-y-4">
+                <CardContent className="flex-1 overflow-y-auto space-y-4 min-h-0">
                   {transcript.map((entry, index) => (
                     <div key={index} className={`flex gap-3 ${entry.speaker === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                       <div className={`w-8 h-8 lg:w-9 lg:h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-md ${
