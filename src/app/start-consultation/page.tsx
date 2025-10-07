@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,6 +17,7 @@ import type { Consultation } from '@/types';
 
 export default function StartConsultationPage() {
   const router = useRouter();
+  const { user } = useUser();
   const [formData, setFormData] = useState({
     topic: '',
     category: '',
@@ -41,12 +43,20 @@ export default function StartConsultationPage() {
       return;
     }
 
+    // Check if user is loaded
+    if (!user) {
+      console.error('User not loaded');
+      return;
+    }
+
     // Generate unique ID
     const consultationId = generateConsultationId();
 
     // Create consultation object following Consultation interface
     const newConsultation: Consultation = {
       id: consultationId,
+      userId: user.id,
+      userEmail: user.emailAddresses[0]?.emailAddress || '',
       title: formData.topic,
       category: formData.category,
       description: formData.topic,
@@ -61,6 +71,8 @@ export default function StartConsultationPage() {
     // Console log the consultation object
     console.log('📞 New Consultation Created:', newConsultation);
     console.log('Consultation ID:', consultationId);
+    console.log('User ID:', user.id);
+    console.log('User Email:', user.emailAddresses[0]?.emailAddress);
     console.log('Topic:', formData.topic);
     console.log('Category:', formData.category);
     console.log('Goals:', formData.goals);

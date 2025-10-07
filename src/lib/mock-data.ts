@@ -3,6 +3,8 @@ import { Consultation } from '@/types';
 export const mockConsultations: Consultation[] = [
   {
     id: '1',
+    userId: 'user_mock_demo123',
+    userEmail: 'demo.user@example.com',
     title: 'Investment Portfolio Review',
     category: 'investment',
     description: 'I want to review my current investment portfolio and get advice on rebalancing. My portfolio is heavily weighted in tech stocks and I\'m concerned about diversification.',
@@ -53,6 +55,8 @@ export const mockConsultations: Consultation[] = [
   },
   {
     id: '2',
+    userId: 'user_mock_demo123',
+    userEmail: 'demo.user@example.com',
     title: 'Retirement Planning Consultation',
     category: 'retirement',
     description: 'I\'m 42 years old and want to ensure I\'m on track for retirement at 65. Currently contributing 8% to my 401(k) with employer match.',
@@ -103,6 +107,8 @@ export const mockConsultations: Consultation[] = [
   },
   {
     id: '3',
+    userId: 'user_mock_demo123',
+    userEmail: 'demo.user@example.com',
     title: 'Debt Management Strategy',
     category: 'debt',
     description: 'I have $45,000 in total debt across credit cards and student loans. Looking for the best strategy to pay it off efficiently.',
@@ -153,6 +159,8 @@ export const mockConsultations: Consultation[] = [
   },
   {
     id: '4',
+    userId: 'user_mock_demo123',
+    userEmail: 'demo.user@example.com',
     title: 'Home Purchase Financial Assessment',
     date: '2024-09-20',
     duration: '28:00',
@@ -200,6 +208,8 @@ export const mockConsultations: Consultation[] = [
   },
   {
     id: '5',
+    userId: 'user_mock_demo123',
+    userEmail: 'demo.user@example.com',
     title: 'Tax Optimization Strategy',
     date: '2024-09-15',
     duration: '22:30',
@@ -247,6 +257,8 @@ export const mockConsultations: Consultation[] = [
   },
   {
     id: '6',
+    userId: 'user_mock_demo123',
+    userEmail: 'demo.user@example.com',
     title: 'Emergency Fund Assessment',
     date: '2024-09-10',
     duration: '15:20',
@@ -293,4 +305,3 @@ export const mockConsultations: Consultation[] = [
     },
   },
 ];
-

@@ -1,5 +1,7 @@
 export interface Consultation {
   id: string;
+  userId: string; // Clerk user ID
+  userEmail: string; // User's email
   title: string;
   category?: string;
   description?: string;
@@ -35,4 +37,3 @@ export interface Report {
     value: string;
   }[];
 }
-
