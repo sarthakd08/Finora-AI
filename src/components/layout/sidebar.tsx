@@ -22,7 +22,7 @@ const navigation = [
     icon: LayoutDashboard,
   },
   {
-    name: 'Schedule Consultation',
+    name: 'Consult Agent',
     href: '/start-consultation',
     icon: Phone,
   },

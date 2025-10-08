@@ -22,6 +22,8 @@ export class SimpleVapiClient {
     streamingMessage: null,
   };
   private listeners: ((state: VapiCallState) => void)[] = [];
+  private lastStreamingText: string = '';
+  private streamingTimeout: NodeJS.Timeout | null = null;
 
   constructor() {
     if (typeof window !== 'undefined') {
@@ -75,40 +77,149 @@ export class SimpleVapiClient {
     // Message received
     this.vapi.on('message', (message: unknown) => {
       console.log('📨 Vapi message received:', message);
+      const msgObj = message as Record<string, unknown>;
+      console.log('📨 Message type:', msgObj?.type);
+      console.log('📨 Message role:', msgObj?.role);
       
       // Extract message data and add to transcript
       if (message && typeof message === 'object') {
         const messageObj = message as Record<string, unknown>;
         
-        const isFinal = messageObj.isFinal === true || messageObj.final === true || messageObj.type === 'final';
-        const messageText = (messageObj.message || messageObj.text || messageObj.content || 'Unknown message') as string;
-        const speaker = messageObj.type === 'user' ? 'user' : 'agent';
-        const timestamp = new Date().toISOString();
-        
-        if (isFinal) {
-          // Final message - add to transcript and clear streaming
-          const newMessage = {
-            speaker,
-            text: messageText,
-            timestamp
-          };
+        // Handle transcript messages - SHOW IMMEDIATELY for real-time feel
+        if (messageObj.type === 'transcript') {
+          const transcriptObj = messageObj.transcript as Record<string, unknown>;
+          const role = messageObj.role || 'assistant';
+          const transcriptType = transcriptObj?.transcriptType as string;
+          const transcriptText = transcriptObj?.transcript as string || '';
           
-          this.updateState({
-            messages: [...this.state.messages, newMessage],
-            streamingMessage: null
-          });
+          console.log(`🎯 Transcript [${role}] [${transcriptType}]:`, transcriptText);
           
-          console.log('✅ Final message added to transcript:', newMessage);
-        } else {
-          // Streaming message - show as typing indicator
-          this.updateState({
-            streamingMessage: {
-              speaker,
-              text: messageText
+          if (transcriptText) {
+            const speaker = role === 'user' ? 'user' : 'assistant';
+            
+            // Show partial transcripts as streaming for real-time feel
+            if (transcriptType === 'partial') {
+              this.lastStreamingText = transcriptText;
+              
+              this.updateState({
+                streamingMessage: {
+                  speaker,
+                  text: transcriptText
+                }
+              });
+              console.log('⚡ Streaming:', role, transcriptText);
+              
+              // Auto-convert to message after 2 seconds of no updates
+              if (this.streamingTimeout) {
+                clearTimeout(this.streamingTimeout);
+              }
+              
+              this.streamingTimeout = setTimeout(() => {
+                if (this.state.streamingMessage?.text === transcriptText) {
+                  const newMessage = {
+                    speaker,
+                    text: transcriptText,
+                    timestamp: new Date().toISOString()
+                  };
+                  
+                  this.updateState({
+                    messages: [...this.state.messages, newMessage],
+                    streamingMessage: null
+                  });
+                  
+                  console.log('⏱️ Auto-finalized streaming message:', role, transcriptText);
+                }
+              }, 2000);
             }
-          });
+            // Convert final transcripts to messages
+            else if (transcriptType === 'final') {
+              // Clear streaming timeout
+              if (this.streamingTimeout) {
+                clearTimeout(this.streamingTimeout);
+                this.streamingTimeout = null;
+              }
+              
+              const newMessage = {
+                speaker,
+                text: transcriptText,
+                timestamp: new Date().toISOString()
+              };
+              
+              this.updateState({
+                messages: [...this.state.messages, newMessage],
+                streamingMessage: null
+              });
+              
+              console.log('✅ Final message added:', role, transcriptText);
+            }
+          }
+        }
+        // Handle conversation messages (assistant responses)
+        else if (messageObj.type === 'conversation-update') {
+          const conversation = messageObj.conversation as Array<Record<string, unknown>>;
+          if (conversation && conversation.length > 0) {
+            const lastMessage = conversation[conversation.length - 1];
+            
+            console.log('💬 Conversation update:', lastMessage);
+            
+            if (lastMessage && lastMessage.content && typeof lastMessage.content === 'string') {
+              // Check if this message is already in our state
+              const messageExists = this.state.messages.some(m => 
+                m.text === lastMessage.content && 
+                m.speaker === (lastMessage.role === 'user' ? 'user' : 'assistant')
+              );
+              
+              if (!messageExists) {
+                const newMessage = {
+                  speaker: lastMessage.role === 'user' ? 'user' : 'assistant',
+                  text: lastMessage.content as string,
+                  timestamp: new Date().toISOString()
+                };
+                
+                this.updateState({
+                  messages: [...this.state.messages, newMessage],
+                  streamingMessage: null
+                });
+                
+                console.log('✅ Conversation message added:', lastMessage.role, lastMessage.content);
+              }
+            }
+          }
+        }
+        // Handle speech-update for real-time streaming
+        else if (messageObj.type === 'speech-update') {
+          const role = messageObj.role || 'assistant';
+          const status = messageObj.status as string;
+          const text = (messageObj.text as string) || '';
           
-          console.log('⏳ Streaming message updated:', messageText);
+          console.log(`🗣️ Speech update [${role}] [${status}]:`, text);
+          
+          if (text) {
+            if (status === 'started' || status === 'in-progress') {
+              // Show as streaming for real-time feel
+              this.updateState({
+                streamingMessage: {
+                  speaker: role === 'user' ? 'user' : 'assistant',
+                  text: text
+                }
+              });
+              console.log('⚡ Speech streaming:', role, text);
+            } else if (status === 'complete') {
+              // Add as final message
+              const newMessage = {
+                speaker: role === 'user' ? 'user' : 'assistant',
+                text: text,
+                timestamp: new Date().toISOString()
+              };
+              
+              this.updateState({
+                messages: [...this.state.messages, newMessage],
+                streamingMessage: null
+              });
+              
+              console.log('✅ Speech complete:', role, text);
+            }
+          }
         }
       }
     });
