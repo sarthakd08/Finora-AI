@@ -1,13 +1,64 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { mockConsultations } from '@/lib/mock-data';
-import { Clock, Calendar } from 'lucide-react';
+import { Clock, Calendar, Loader2 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Sidebar } from '@/components/layout/sidebar';
+import { getConsultations } from '@/lib/supabase/consultations';
+
+interface DBConsultation {
+  id: string;
+  user_id: string;
+  user_email: string;
+  title: string;
+  category?: string;
+  description?: string;
+  goals?: string;
+  date: string;
+  duration: string;
+  status: 'in-progress' | 'completed' | 'scheduled';
+  agent_name: string;
+  summary: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function DashboardPage() {
-  const completedConsultations = mockConsultations.filter(consultation => consultation.status === 'completed');
+  const { user } = useUser();
+  const [consultations, setConsultations] = useState<DBConsultation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchConsultations() {
+      if (!user) return;
+      
+      try {
+        setLoading(true);
+        const result = await getConsultations();
+        
+        if (result.success) {
+          setConsultations(result.data);
+        } else {
+          setError('Failed to load consultations');
+        }
+      } catch (err) {
+        console.error('Error fetching consultations:', err);
+        setError('Failed to load consultations');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchConsultations();
+  }, [user]);
+
+  // Calculate stats
+  const completedConsultations = consultations.filter(c => c.status === 'completed');
   const totalDuration = completedConsultations.reduce((acc, consultation) => {
     const [minutes] = consultation.duration.split(':');
     return acc + parseInt(minutes);
@@ -24,7 +75,7 @@ export default function DashboardPage() {
           <div className="px-8 py-4 flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Dashboard</h1>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Welcome back! Here's your financial overview</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Welcome back! Here&apos;s your financial overview</p>
             </div>
             <ThemeToggle />
           </div>
@@ -37,7 +88,7 @@ export default function DashboardPage() {
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
               <CardHeader className="pb-3">
                 <CardDescription className="dark:text-slate-400">Total Consultations</CardDescription>
-                <CardTitle className="text-3xl dark:text-white">{completedConsultations.length}</CardTitle>
+                <CardTitle className="text-3xl dark:text-white">{consultations.length}</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-green-600 dark:text-green-400 font-medium">All time</p>
@@ -47,77 +98,118 @@ export default function DashboardPage() {
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
               <CardHeader className="pb-3">
                 <CardDescription className="dark:text-slate-400">Total Duration</CardDescription>
-                <CardTitle className="text-3xl dark:text-white">{totalDuration} min</CardTitle>
+                <CardTitle className="text-3xl dark:text-white">
+                  {totalDuration > 0 ? `${totalDuration} min` : '0 min'}
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Average: {Math.round(totalDuration / completedConsultations.length)} min/consultation</p>
+                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+                  {completedConsultations.length > 0 
+                    ? `Average: ${Math.round(totalDuration / completedConsultations.length)} min/consultation`
+                    : 'No completed consultations yet'
+                  }
+                </p>
               </CardContent>
             </Card>
             
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
               <CardHeader className="pb-3">
-                <CardDescription className="dark:text-slate-400">Satisfaction Rate</CardDescription>
-                <CardTitle className="text-3xl dark:text-white">
-                  {((completedConsultations.reduce((acc, consultation) => acc + (consultation.feedback?.rating || 0), 0) / completedConsultations.length / 5) * 100).toFixed(0)}%
-                </CardTitle>
+                <CardDescription className="dark:text-slate-400">Completed</CardDescription>
+                <CardTitle className="text-3xl dark:text-white">{completedConsultations.length}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">Based on {completedConsultations.length} reviews</p>
+                <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">
+                  {consultations.length - completedConsultations.length} in progress
+                </p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Call History */}
+          {/* Consultations Section */}
           <div className="mb-6">
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Recent Consultations</h2>
-            <p className="text-slate-600 dark:text-slate-400">Click on any consultation to view detailed report and feedback</p>
+            <p className="text-slate-600 dark:text-slate-400">Click on any consultation to view detailed information</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockConsultations.map((consultation) => (
-              <Link key={consultation.id} href={`/consultation-details/${consultation.id}`}>
-                <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-none bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm hover:scale-105 hover:bg-white dark:hover:bg-gray-800">
-                  <CardHeader>
-                    <div className="flex items-start justify-between mb-2">
-                      <Badge 
-                        variant={consultation.status === 'completed' ? 'default' : 'secondary'}
-                        className={consultation.status === 'completed' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900' : ''}
-                      >
-                        {consultation.status}
-                      </Badge>
-                      {consultation.feedback && (
-                        <div className="flex items-center gap-1 text-sm dark:text-white">
-                          <span className="text-yellow-500">★</span>
-                          <span className="font-semibold">{consultation.feedback.rating}.0</span>
+          {/* Loading State */}
+          {loading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && !loading && (
+            <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30">
+              <CardContent className="py-6">
+                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && consultations.length === 0 && (
+            <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
+              <CardContent className="py-12 text-center">
+                <p className="text-slate-600 dark:text-slate-400 mb-4">No consultations yet. Start your first consultation!</p>
+                <Link 
+                  href="/start-consultation"
+                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all"
+                >
+                  Start Consultation
+                </Link>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Consultations Grid */}
+          {!loading && !error && consultations.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {consultations.map((consultation) => (
+                <Link key={consultation.id} href={`/consultation-details/${consultation.id}`}>
+                  <Card className="group hover:shadow-2xl transition-all duration-300 cursor-pointer border-none bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm hover:scale-105 hover:bg-white dark:hover:bg-gray-800">
+                    <CardHeader>
+                      <div className="flex items-start justify-between mb-2">
+                        <Badge 
+                          variant={consultation.status === 'completed' ? 'default' : 'secondary'}
+                          className={
+                            consultation.status === 'completed' 
+                              ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900' 
+                              : consultation.status === 'in-progress'
+                              ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900'
+                              : ''
+                          }
+                        >
+                          {consultation.status}
+                        </Badge>
+                      </div>
+                      <CardTitle className="text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors dark:text-white">
+                        {consultation.title}
+                      </CardTitle>
+                      <CardDescription className="text-xs mt-1 dark:text-slate-400">
+                        with {consultation.agent_name}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">
+                        {consultation.summary}
+                      </p>
+                      <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{new Date(consultation.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                         </div>
-                      )}
-                    </div>
-                    <CardTitle className="text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors dark:text-white">
-                      {consultation.title}
-                    </CardTitle>
-                    <CardDescription className="text-xs mt-1 dark:text-slate-400">
-                      with {consultation.agentName}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">
-                      {consultation.summary}
-                    </p>
-                    <div className="flex items-center gap-4 text-xs text-slate-500 dark:text-slate-400">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{new Date(consultation.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span>{consultation.duration}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{consultation.duration}</span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
         </main>
       </div>
     </div>
