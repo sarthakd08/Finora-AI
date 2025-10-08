@@ -93,6 +93,8 @@ export async function PATCH(
     const consultationId = params.id;
     const body = await request.json();
 
+    console.log('📝 PATCH request received:', { consultationId, body });
+
     const supabase = getServiceRoleClient();
     
     // Build update object with only provided fields
@@ -101,6 +103,7 @@ export async function PATCH(
     if (body.duration !== undefined) updateData.duration = body.duration;
     if (body.summary !== undefined) updateData.summary = body.summary;
     if (body.title !== undefined) updateData.title = body.title;
+    if (body.feedback !== undefined) updateData.feedback = body.feedback;
 
     const { data, error } = await supabase
       .from('consultations')
@@ -112,6 +115,9 @@ export async function PATCH(
 
     if (error) {
       console.error('❌ Error updating consultation:', error);
+      console.error('❌ Update data:', updateData);
+      console.error('❌ Consultation ID:', consultationId);
+      console.error('❌ User ID:', userId);
       return NextResponse.json(
         { success: false, error: error.message },
         { status: 500 }

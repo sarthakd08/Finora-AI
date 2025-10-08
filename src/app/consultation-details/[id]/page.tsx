@@ -26,6 +26,13 @@ interface DBConsultation {
   status: 'in-progress' | 'completed' | 'scheduled';
   agent_name: string;
   summary: string;
+  feedback?: {
+    rating: number;
+    comment: string;
+    helpfulness: number;
+    clarity: number;
+    timestamp: string;
+  };
   created_at: string;
   updated_at: string;
 }
@@ -160,10 +167,10 @@ export default function ConsultationDetailPage() {
           <div className="flex items-center justify-between mb-2">
             <Link href="/dashboard">
               <Button variant="ghost" size="sm">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          </Link>
             <div className="flex items-center gap-3">
               <ThemeToggle />
               <UserButton 
@@ -285,191 +292,202 @@ export default function ConsultationDetailPage() {
 
           {/* Report Tab (Mock Data) */}
           <TabsContent value="report" className="space-y-6">
-            {/* Overview */}
+                {/* Overview */}
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
-              <CardHeader>
+                  <CardHeader>
                 <CardTitle className="flex items-center gap-2 dark:text-white">
                   <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
                     <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                      </div>
+                      Overview
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                 <p className="text-slate-700 dark:text-slate-300 leading-relaxed">{mockReport.overview}</p>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
 
-            {/* Financial Metrics */}
-            <Card className="border-none shadow-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-white">
-              <CardHeader>
-                <CardTitle>Key Financial Metrics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Financial Metrics */}
+                  <Card className="border-none shadow-lg bg-gradient-to-br from-blue-600 to-indigo-600 text-white">
+                    <CardHeader>
+                      <CardTitle>Key Financial Metrics</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {mockReport.financialMetrics.map((metric, index) => (
-                    <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                      <p className="text-sm text-white/80 mb-1">{metric.label}</p>
-                      <p className="text-2xl font-bold">{metric.value}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                          <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                            <p className="text-sm text-white/80 mb-1">{metric.label}</p>
+                            <p className="text-2xl font-bold">{metric.value}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
 
-            {/* Risk Assessment */}
+                {/* Risk Assessment */}
             <Card className={`border-none shadow-lg ${getRiskColor(mockReport.riskAssessment.level)}`}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
                   {getRiskIcon(mockReport.riskAssessment.level)}
                   Risk Assessment: {mockReport.riskAssessment.level.toUpperCase()}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                 <p className="leading-relaxed">{mockReport.riskAssessment.description}</p>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
 
-            {/* Key Points */}
+                {/* Key Points */}
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
-              <CardHeader>
+                  <CardHeader>
                 <CardTitle className="flex items-center gap-2 dark:text-white">
                   <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
                     <Target className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  Key Points
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
+                      </div>
+                      Key Points
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
                   {mockReport.keyPoints.map((point, index) => (
-                    <li key={index} className="flex items-start gap-3">
+                        <li key={index} className="flex items-start gap-3">
                       <span className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 flex items-center justify-center text-sm font-semibold flex-shrink-0 mt-0.5">
-                        {index + 1}
-                      </span>
+                            {index + 1}
+                          </span>
                       <span className="text-slate-700 dark:text-slate-300 leading-relaxed">{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
 
-            {/* Recommendations */}
+                {/* Recommendations */}
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
-              <CardHeader>
+                  <CardHeader>
                 <CardTitle className="flex items-center gap-2 dark:text-white">
                   <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900 flex items-center justify-center">
                     <CheckCircle2 className="w-4 h-4 text-green-600 dark:text-green-400" />
-                  </div>
-                  Recommendations
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
+                      </div>
+                      Recommendations
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
                   {mockReport.recommendations.map((rec, index) => (
                     <li key={index} className="flex items-start gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-950/30">
                       <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                       <span className="text-slate-700 dark:text-slate-300 leading-relaxed">{rec}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
 
-            {/* Action Items */}
+                {/* Action Items */}
             <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
-              <CardHeader>
+                  <CardHeader>
                 <CardTitle className="flex items-center gap-2 dark:text-white">
                   <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
                     <Target className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                  </div>
-                  Action Items
-                </CardTitle>
+                      </div>
+                      Action Items
+                    </CardTitle>
                 <CardDescription className="dark:text-slate-400">Next steps to implement the recommendations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-3">
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
                   {mockReport.actionItems.map((item, index) => (
                     <li key={index} className="flex items-start gap-3 p-4 rounded-lg border-l-4 border-orange-500 bg-orange-50 dark:bg-orange-950/30">
-                      <span className="w-6 h-6 rounded bg-orange-500 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">
-                        {index + 1}
-                      </span>
+                          <span className="w-6 h-6 rounded bg-orange-500 text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">
+                            {index + 1}
+                          </span>
                       <span className="text-slate-700 dark:text-white leading-relaxed font-medium">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-            </Card>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
           </TabsContent>
 
-          {/* Feedback Tab (Mock Data) */}
+          {/* Feedback Tab - Real Data */}
           <TabsContent value="feedback">
-            <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 dark:text-white">
-                  <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
-                  Client Feedback
-                </CardTitle>
-                <CardDescription className="dark:text-slate-400">
-                  Example feedback (coming soon from actual consultation data)
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Overall Rating */}
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Overall Rating</h3>
-                  <div className="flex items-center gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={`w-8 h-8 ${star <= mockFeedback.rating ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300 dark:text-slate-700'}`}
-                      />
-                    ))}
-                    <span className="text-2xl font-bold text-slate-900 dark:text-white ml-2">{mockFeedback.rating}.0</span>
-                  </div>
-                </div>
-
-                <Separator className="dark:bg-slate-700" />
-
-                {/* Detailed Ratings */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {consultation.feedback ? (
+              <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 dark:text-white">
+                    <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+                    Client Feedback
+                  </CardTitle>
+                  <CardDescription className="dark:text-slate-400">
+                    Submitted on {new Date(consultation.feedback.timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Overall Rating */}
                   <div>
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Helpfulness</h3>
+                    <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Overall Rating</h3>
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-3">
-                        <div 
-                          className="bg-gradient-to-r from-blue-600 to-indigo-600 h-3 rounded-full transition-all"
-                          style={{ width: `${(mockFeedback.helpfulness / 5) * 100}%` }}
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-8 h-8 ${star <= consultation.feedback.rating ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300 dark:text-slate-700'}`}
                         />
-                      </div>
-                      <span className="text-lg font-semibold text-slate-900 dark:text-white">{mockFeedback.helpfulness}/5</span>
+                      ))}
+                      <span className="text-2xl font-bold text-slate-900 dark:text-white ml-2">{consultation.feedback.rating}.0</span>
                     </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Clarity</h3>
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-3">
-                        <div 
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 h-3 rounded-full transition-all"
-                          style={{ width: `${(mockFeedback.clarity / 5) * 100}%` }}
-                        />
+
+                  <Separator className="dark:bg-slate-700" />
+
+                  {/* Detailed Ratings */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Helpfulness</h3>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-3">
+                          <div 
+                            className="bg-gradient-to-r from-blue-600 to-indigo-600 h-3 rounded-full transition-all"
+                            style={{ width: `${(consultation.feedback.helpfulness / 5) * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-lg font-semibold text-slate-900 dark:text-white">{consultation.feedback.helpfulness}/5</span>
                       </div>
-                      <span className="text-lg font-semibold text-slate-900 dark:text-white">{mockFeedback.clarity}/5</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Clarity</h3>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full h-3">
+                          <div 
+                            className="bg-gradient-to-r from-purple-600 to-pink-600 h-3 rounded-full transition-all"
+                            style={{ width: `${(consultation.feedback.clarity / 5) * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-lg font-semibold text-slate-900 dark:text-white">{consultation.feedback.clarity}/5</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <Separator className="dark:bg-slate-700" />
+                  <Separator className="dark:bg-slate-700" />
 
-                {/* Comment */}
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Comments</h3>
-                  <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border-l-4 border-blue-600">
-                    <p className="text-slate-700 dark:text-slate-300 leading-relaxed italic">&quot;{mockFeedback.comment}&quot;</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  {/* Comment */}
+                  {consultation.feedback.comment && (
+                    <div>
+                      <h3 className="font-semibold text-slate-900 dark:text-white mb-3">Comments</h3>
+                      <div className="bg-slate-50 dark:bg-slate-900 rounded-lg p-4 border-l-4 border-blue-600">
+                        <p className="text-slate-700 dark:text-slate-300 leading-relaxed italic">&quot;{consultation.feedback.comment}&quot;</p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
+                <CardContent className="py-12 text-center">
+                  <Star className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                  <p className="text-slate-600 dark:text-slate-400">No feedback available for this consultation yet.</p>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </main>
