@@ -119,7 +119,7 @@ export default function ConsultationPage() {
         setIsUserSpeaking(true);
         setIsAgentSpeaking(false);
         // Reset user speaking after 2 seconds
-        setTimeout(() => {
+    setTimeout(() => {
           console.log('🎤 User speaking reset');
           setIsUserSpeaking(false);
         }, 2000);
@@ -128,7 +128,7 @@ export default function ConsultationPage() {
         setIsAgentSpeaking(true);
         setIsUserSpeaking(false);
         // Reset agent speaking after 2 seconds
-        setTimeout(() => {
+    setTimeout(() => {
           console.log('🎤 Agent speaking reset');
           setIsAgentSpeaking(false);
         }, 2000);
@@ -426,37 +426,39 @@ export default function ConsultationPage() {
         </header>
 
         {/* Active Call Screen */}
-        <main className="w-full">
-        <div className="flex min-h-[calc(100vh-130px)] p-4 lg:p-8">
-          {/* LEFT SIDE - Call Interface & Consultation Details */}
-          <div className="w-full lg:w-1/2 pr-0 lg:pr-4">
-              <div className="max-w-2xl w-full space-y-4 lg:space-y-6">
-                <Card className="border-none shadow-2xl bg-white/90 dark:bg-gray-800/95 backdrop-blur-sm">
-                  <CardContent className="p-4 lg:p-8">
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{agentName}</h2>
+        <main className="w-full overflow-hidden">
+        <div className="flex h-[calc(100vh-80px)] p-4 lg:p-6 gap-4 lg:gap-6">
+          {/* LEFT SIDE - Call Interface */}
+          <div className="w-full lg:w-1/2 flex flex-col overflow-hidden">
+              <Card className="border-none shadow-2xl bg-white/90 dark:bg-gray-800/95 backdrop-blur-sm flex-1 overflow-auto">
+                  <CardContent className="p-5 lg:p-7 space-y-5">
+                  <div className="text-center mb-4">
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{agentName}</h2>
                     
                     {/* Avatars - Horizontally Aligned with Glass Design */}
-                    <div className="bg-white/40 dark:bg-gray-700/30 backdrop-blur-md rounded-3xl p-6 border border-white/20 dark:border-gray-600/30 shadow-xl mb-6">
-                      <div className="flex items-center justify-center gap-16">
+                    <div className="bg-white/40 dark:bg-gray-700/30 backdrop-blur-md rounded-2xl p-6 border border-white/20 dark:border-gray-600/30 shadow-xl">
+                      <div className="flex items-center justify-center gap-12">
                       {/* Agent Avatar */}
                       <div className="flex flex-col items-center gap-2">
                         <div className="relative">
-                          <div className={`w-32 h-32 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center shadow-xl transition-all duration-300 ${
+                          <div className={`w-28 h-28 rounded-full bg-gradient-to-br from-slate-600 to-slate-700 flex items-center justify-center shadow-lg transition-all duration-300 ${
                             isAgentSpeaking ? 'scale-110 shadow-2xl' : ''
                           }`}>
-                            <User className="w-16 h-16 text-white" />
+                            <User className="w-14 h-14 text-white" />
                           </div>
                           {/* Ripple effect for agent speaking */}
                           {isAgentSpeaking && (
-                            <div className="absolute inset-0 rounded-full border-4 border-blue-400 animate-ping"></div>
+                            <>
+                              <div className="absolute inset-0 rounded-full border-4 border-blue-400 animate-ping"></div>
+                              <div className="absolute inset-0 rounded-full border-4 border-blue-500 opacity-75"></div>
+                            </>
                           )}
                           {/* Active indicator for agent */}
-                          <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-white dark:border-gray-800 flex items-center justify-center shadow-lg">
-                            <div className="w-3 h-3 rounded-full bg-white animate-pulse" />
+                          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-green-500 border-4 border-white dark:border-gray-800 flex items-center justify-center shadow-lg">
+                            <div className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
                           </div>
                         </div>
-                        <div className="text-center mt-2">
+                        <div className="text-center mt-1">
                           <p className="text-sm font-medium text-slate-600 dark:text-slate-400">AI Agent</p>
                           </div>
                       </div>
@@ -464,21 +466,24 @@ export default function ConsultationPage() {
                       {/* User Avatar */}
                       <div className="flex flex-col items-center gap-2">
                         <div className="relative">
-                          <div className={`w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-xl transition-all duration-300 ${
+                          <div className={`w-28 h-28 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg transition-all duration-300 ${
                             isUserSpeaking ? 'scale-110 shadow-2xl' : ''
                           }`}>
-                            <User className="w-16 h-16 text-white" />
+                            <User className="w-14 h-14 text-white" />
                           </div>
                           {/* Ripple effect for user speaking */}
                           {isUserSpeaking && (
-                            <div className="absolute inset-0 rounded-full border-4 border-blue-400 animate-ping"></div>
+                            <>
+                              <div className="absolute inset-0 rounded-full border-4 border-blue-400 animate-ping"></div>
+                              <div className="absolute inset-0 rounded-full border-4 border-blue-500 opacity-75"></div>
+                            </>
                           )}
                           {/* Active indicator for user */}
-                          <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-green-500 border-4 border-white dark:border-gray-800 flex items-center justify-center shadow-lg">
-                            <div className="w-3 h-3 rounded-full bg-white animate-pulse" />
+                          <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-green-500 border-4 border-white dark:border-gray-800 flex items-center justify-center shadow-lg">
+                            <div className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
                           </div>
                         </div>
-                        <div className="text-center mt-2">
+                        <div className="text-center mt-1">
                           <p className="text-sm font-medium text-slate-600 dark:text-slate-400">You</p>
                         </div>
                       </div>
@@ -510,7 +515,7 @@ export default function ConsultationPage() {
                     {/* Call Controls */}
                   {!isCallActive && !isConnecting ? (
                     // Start Call Button with Enhanced UI
-                    <div className="flex flex-col items-center gap-6 mt-8">
+                    <div className="flex flex-col items-center gap-4 mt-4">
                       <div className="relative">
                         {/* Animated glow rings */}
                         <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 blur-2xl opacity-50 animate-pulse"></div>
@@ -519,32 +524,29 @@ export default function ConsultationPage() {
                         {/* Main button */}
                         <Button
                           size="lg"
-                          className="relative h-24 w-24 rounded-full bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 hover:from-green-600 hover:via-green-700 hover:to-emerald-700 text-white shadow-2xl hover:shadow-emerald-500/60 transition-all duration-300 transform hover:scale-110 group"
+                          className="relative h-20 w-20 rounded-full bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 hover:from-green-600 hover:via-green-700 hover:to-emerald-700 text-white shadow-2xl hover:shadow-emerald-500/60 transition-all duration-300 transform hover:scale-110 group"
                           onClick={handleStartCall}
                         >
                           {/* Shine effect */}
                           <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-white/0 via-white/30 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                           
                           {/* Icon with pulse animation */}
-                          <div className="relative flex flex-col items-center gap-1">
-                            <Phone className="w-8 h-8 animate-bounce" />
-                            <span className="text-xs font-bold tracking-wide">START</span>
+                          <div className="relative flex flex-col items-center gap-0.5">
+                            <Phone className="w-6 h-6 animate-bounce" />
+                            <span className="text-[10px] font-bold tracking-wide">START</span>
                           </div>
                         </Button>
                       </div>
                       
-                      <div className="text-center space-y-1">
-                        <p className="text-base font-semibold text-slate-700 dark:text-slate-300 animate-pulse">
-                          Ready to begin? 🚀
-                        </p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">
-                          Click the button to start your consultation with {agentName}
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                          Click to start consultation
                         </p>
                       </div>
                     </div>
                   ) : (
                     // Active Call Controls
-                    <div className="flex items-center justify-center gap-4 mt-8">
+                    <div className="flex items-center justify-center gap-3 mt-4">
                       <Button
                         size="lg"
                         className="h-12 w-12"
@@ -600,37 +602,33 @@ export default function ConsultationPage() {
               {/* Consultation Details - Always visible on left */}
               {consultation && (
                 <Card className="border-none shadow-xl bg-white/90 dark:bg-gray-800/95 backdrop-blur-sm">
-                  <CardHeader>
-                    <CardTitle className="text-lg dark:text-white">Consultation Details</CardTitle>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base dark:text-white">Consultation Details</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="space-y-2 pt-0">
                     <div>
-                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">TOPIC</p>
-                      <p className="text-base font-semibold text-slate-900 dark:text-white">{consultation.title}</p>
+                      <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-0.5">TOPIC</p>
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white">{consultation.title}</p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">CATEGORY</p>
-                      <Badge variant="secondary" className="capitalize">{consultation.category}</Badge>
+                      <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-0.5">CATEGORY</p>
+                      <Badge variant="secondary" className="capitalize text-xs">{consultation.category}</Badge>
                     </div>
                     {consultation.goals && (
                       <div>
-                        <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">GOALS</p>
-                        <p className="text-sm text-slate-700 dark:text-slate-300">{consultation.goals}</p>
+                        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mb-0.5">GOALS</p>
+                        <p className="text-xs text-slate-700 dark:text-slate-300">{consultation.goals}</p>
                       </div>
                     )}
                   </CardContent>
                 </Card>
               )}
-
             </div>
-          </div>
 
           {/* RIGHT SIDE - Transcript Only */}
-          <div className="w-full lg:w-1/2 pl-0 lg:pl-4">
-            <div className="space-y-4 lg:space-y-6">
-
+          <div className="w-full lg:w-1/2 flex flex-col overflow-hidden">
               {/* Live Transcript - Always visible with Glass Design */}
-              <Card className="border-none shadow-2xl bg-gradient-to-br from-white/95 via-white/90 to-white/85 dark:from-gray-800/95 dark:via-gray-800/90 dark:to-gray-800/85 backdrop-blur-md h-[calc(100vh-200px)] overflow-hidden">
+              <Card className="border-none shadow-2xl bg-gradient-to-br from-white/95 via-white/90 to-white/85 dark:from-gray-800/95 dark:via-gray-800/90 dark:to-gray-800/85 backdrop-blur-md flex-1 overflow-hidden flex flex-col">
                 <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-700/50 dark:to-gray-600/50 backdrop-blur-sm border-b border-blue-100 dark:border-gray-600/30 pb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
@@ -639,8 +637,8 @@ export default function ConsultationPage() {
                       </div>
                       <div>
                         <CardTitle className="text-lg dark:text-white font-bold">
-                          Live Transcript
-                        </CardTitle>
+                    Live Transcript
+                  </CardTitle>
                         <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                           Real-time conversation
                         </p>
@@ -654,7 +652,7 @@ export default function ConsultationPage() {
                     )}
                   </div>
                 </CardHeader>
-                <CardContent className="h-[calc(100%-80px)] p-0">
+                <CardContent className="flex-1 p-0 overflow-hidden">
                   <div className="h-full overflow-y-auto space-y-3 p-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
                     {messages.length === 0 && !streamingMessage ? (
                       <div className="flex flex-col items-center justify-center h-full text-center">
@@ -783,7 +781,6 @@ export default function ConsultationPage() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
             </div>
           </div>
         </main>
