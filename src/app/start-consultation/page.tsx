@@ -10,10 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Phone, TrendingUp, User, CheckCircle, Sparkles } from 'lucide-react';
+import { ArrowLeft, Phone, TrendingUp, User, CheckCircle, Sparkles, Loader2 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { UserButton } from '@clerk/nextjs';
 import type { Consultation } from '@/types';
+import { saveConsultation } from '@/lib/supabase/consultations';
 
 export default function StartConsultationPage() {
   const router = useRouter();
@@ -23,6 +24,8 @@ export default function StartConsultationPage() {
     category: '',
     goals: '',
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Demo agent name
   const agentName = 'Alex Financial AI';
@@ -37,48 +40,77 @@ export default function StartConsultationPage() {
     return crypto.randomUUID();
   };
 
-  // Start consultation
-  const startConsultation = () => {
+  // Start consultation with database save
+  const startConsultation = async () => {
     if (!isFormValid()) {
       return;
     }
 
     // Check if user is loaded
     if (!user) {
-      console.error('User not loaded');
+      setError('User not loaded. Please try again.');
       return;
     }
 
-    // Generate unique ID
-    const consultationId = generateConsultationId();
+    setIsSaving(true);
+    setError(null);
 
-    // Create consultation object following Consultation interface
-    const newConsultation: Consultation = {
-      id: consultationId,
-      userId: user.id,
-      userEmail: user.emailAddresses[0]?.emailAddress || '',
-      title: formData.topic,
-      category: formData.category,
-      description: formData.topic,
-      goals: formData.goals,
-      date: new Date().toISOString().split('T')[0],
-      duration: '00:00',
-      status: 'in-progress',
-      agentName: agentName,
-      summary: `Consultation about ${formData.topic}`,
-    };
+    try {
+      // Generate unique ID
+      const consultationId = generateConsultationId();
 
-    // Console log the consultation object
-    console.log('📞 New Consultation Created:', newConsultation);
-    console.log('Consultation ID:', consultationId);
-    console.log('User ID:', user.id);
-    console.log('User Email:', user.emailAddresses[0]?.emailAddress);
-    console.log('Topic:', formData.topic);
-    console.log('Category:', formData.category);
-    console.log('Goals:', formData.goals);
+      // Create consultation object following Consultation interface
+      const newConsultation: Consultation = {
+        id: consultationId,
+        userId: user.id,
+        userEmail: user.emailAddresses[0]?.emailAddress || '',
+        title: formData.topic,
+        category: formData.category,
+        description: formData.topic,
+        goals: formData.goals,
+        date: new Date().toISOString().split('T')[0],
+        duration: '00:00',
+        status: 'in-progress',
+        agentName: agentName,
+        summary: `Consultation about ${formData.topic}`,
+      };
 
-    // Navigate to consultation page (only with ID)
-    router.push(`/consultation/${consultationId}`);
+      // Console log the consultation object
+      console.log('📞 New Consultation Created:', newConsultation);
+      console.log('Consultation ID:', consultationId);
+      console.log('User ID:', user.id);
+      console.log('User Email:', user.emailAddresses[0]?.emailAddress);
+
+      // 🔥 SAVE TO DATABASE BEFORE NAVIGATING
+      const result = await saveConsultation({
+        id: newConsultation.id,
+        userId: newConsultation.userId,
+        userEmail: newConsultation.userEmail,
+        title: newConsultation.title,
+        category: newConsultation.category,
+        description: newConsultation.description,
+        goals: newConsultation.goals,
+        date: newConsultation.date,
+        duration: newConsultation.duration,
+        status: newConsultation.status,
+        agentName: newConsultation.agentName,
+        summary: newConsultation.summary,
+      });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to save consultation');
+      }
+
+      console.log('✅ Consultation saved to database successfully!');
+
+      // Navigate to consultation page after successful save
+      router.push(`/consultation/${consultationId}`);
+    } catch (err) {
+      console.error('❌ Error starting consultation:', err);
+      setError(err instanceof Error ? err.message : 'Failed to start consultation. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -88,7 +120,7 @@ export default function StartConsultationPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" disabled={isSaving}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
               </Button>
@@ -132,6 +164,15 @@ export default function StartConsultationPage() {
             </CardHeader>
           </Card>
 
+          {/* Error Display */}
+          {error && (
+            <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30">
+              <CardContent className="pt-6">
+                <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Form Card */}
           <Card className="border-none shadow-xl bg-white/90 dark:bg-gray-800/95 backdrop-blur-sm">
             <CardHeader>
@@ -155,6 +196,7 @@ export default function StartConsultationPage() {
                   value={formData.topic}
                   onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
                   className="dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                  disabled={isSaving}
                   required
                 />
               </div>
@@ -164,7 +206,11 @@ export default function StartConsultationPage() {
                 <Label htmlFor="category" className="text-sm font-medium dark:text-white">
                   Category <span className="text-red-500">*</span>
                 </Label>
-                <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                <Select 
+                  value={formData.category} 
+                  onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  disabled={isSaving}
+                >
                   <SelectTrigger className="dark:bg-gray-900 dark:border-gray-700 dark:text-white">
                     <SelectValue placeholder="Select consultation category" />
                   </SelectTrigger>
@@ -191,6 +237,7 @@ export default function StartConsultationPage() {
                   onChange={(e) => setFormData({ ...formData, goals: e.target.value })}
                   rows={4}
                   className="dark:bg-gray-900 dark:border-gray-700 dark:text-white"
+                  disabled={isSaving}
                 />
               </div>
 
@@ -216,18 +263,27 @@ export default function StartConsultationPage() {
                 </ul>
               </div>
 
-              {/* Start Button */}
+              {/* Start Button with Loading State */}
               <Button 
                 size="lg" 
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg py-6 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={startConsultation}
-                disabled={!isFormValid()}
+                disabled={!isFormValid() || isSaving}
               >
-                <Phone className="w-5 h-5 mr-2" />
-                Start Consultation
+                {isSaving ? (
+                  <>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    Starting Consultation...
+                  </>
+                ) : (
+                  <>
+                    <Phone className="w-5 h-5 mr-2" />
+                    Start Consultation
+                  </>
+                )}
               </Button>
               
-              {!isFormValid() && (
+              {!isFormValid() && !isSaving && (
                 <p className="text-xs text-center text-slate-500 dark:text-slate-400">
                   Please fill in all required fields to start your consultation
                 </p>
