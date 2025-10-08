@@ -9,6 +9,7 @@ import { Clock, Calendar, Loader2 } from 'lucide-react';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Sidebar } from '@/components/layout/sidebar';
 import { getConsultations } from '@/lib/supabase/consultations';
+import { NoConsultations } from '@/components/empty-states/no-consultations';
 
 interface DBConsultation {
   id: string;
@@ -149,17 +150,7 @@ export default function DashboardPage() {
 
           {/* Empty State */}
           {!loading && !error && consultations.length === 0 && (
-            <Card className="border-none shadow-lg bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm">
-              <CardContent className="py-12 text-center">
-                <p className="text-slate-600 dark:text-slate-400 mb-4">No consultations yet. Start your first consultation!</p>
-                <Link 
-                  href="/start-consultation"
-                  className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all"
-                >
-                  Start Consultation
-                </Link>
-              </CardContent>
-            </Card>
+            <NoConsultations />
           )}
 
           {/* Consultations Grid */}
